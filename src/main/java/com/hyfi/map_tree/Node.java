@@ -2,7 +2,7 @@ package com.hyfi.map_tree;
 // Imports for logging
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import com.google.gson.*;
 import ch.qos.logback.classic.pattern.SyslogStartConverter;
 
 import java.util.*;
@@ -198,37 +198,101 @@ public class Node {
     public String toString() {
         String json = "";
         String adj = "";
+        
         try {
+            String nextNodeName = (getNextShortestNode() == null ? "none" : getNextShortestNode().getNodeName());
+            String previousNodeName = (getPreviousShortestNode() == null ? "none" : getPreviousShortestNode().getNodeName());
+            StringBuilder sb = new StringBuilder();
+            for (Node n : this.adjascentNodes) {
+                sb.append("\n"+n.toString()+"\n");
+            }
             // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
-            json = "{\n" +
-            "\t 'nodeName': '" + getNodeName() + "',\n" +
-            // "\t 'adjascentNodes': '[" + getAdjascentNodeToString(this.adjascentNodes) + "]',\n" +
-            "\t 'nextShortestNode': '" + (getNextShortestNode().getNodeName() == null ? "none" : getNextShortestNode().getNodeName()) + "',\n" +
-            "\t 'previousShortestNode': '" + (getPreviousShortestNode().getNodeName() == null ? "none" : getPreviousShortestNode().getNodeName()) + "',\n" +
-            "\t 'distanceToNextShortestNode': '" + getDistanceToNextShortestNode() + "',\n" +
-            "\t 'distanceToPreviousShortestNode': '" + getDistanceToPreviousShortestNode() + "'\n" +
-            "}";
+            sb.append("{\n" +
+                    "\t 'nodeName': '" + getNodeName() + "',\n"+
+                    "\t 'adjascentNodes': '[\n");
+            for (Node n : this.adjascentNodes) {
+                sb.append("\n"+n+"\n");
+            }
+            
+            sb.append("]',\n" +
+                      "\t 'nextShortestNode': '" + (nextNodeName) + "',\n" +
+                      "\t 'previousShortestNode': '" + (previousNodeName) + "',\n" +
+                      "\t 'distanceToNextShortestNode': '" + getDistanceToNextShortestNode() + "',\n" +
+                      "\t 'distanceToPreviousShortestNode': '" + getDistanceToPreviousShortestNode() + "'\n" +
+                      "}");
         } catch (NullPointerException e) {
             //TODO: handle exception
-            // e.printStackTrace();
+            e.printStackTrace();
         }
         return json;
+    }
+    
+    private String toString(Node node)
+    {
+
+        try {
+            String nextNodeName = (getNextShortestNode() == null ? "none" : getNextShortestNode().getNodeName());
+            String previousNodeName = (getPreviousShortestNode() == null ? "none" : getPreviousShortestNode().getNodeName());
+
+            StringBuilder sb = new StringBuilder();
+            for (Node n : this.adjascentNodes) {
+                sb.append("\n"+n.toString()+"\n");
+            }
+            // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
+            sb.append("{\n" +
+                    "\t 'nodeName': '" + getNodeName() + "',\n"+
+                    "\t 'adjascentNodes': '[\n");
+            for (Node n : this.adjascentNodes) 
+            {
+                sb.append("\n"+n+"\n");            
+            }
+            
+            sb.append("]',\n" +
+                      "\t 'nextShortestNode': '" + (nextNodeName) + "',\n" +
+                      "\t 'previousShortestNode': '" + (previousNodeName) + "',\n" +
+                      "\t 'distanceToNextShortestNode': '" + getDistanceToNextShortestNode() + "',\n" +
+                      "\t 'distanceToPreviousShortestNode': '" + getDistanceToPreviousShortestNode() + "'\n" +
+                      "}");
+
+
+        } catch (NullPointerException e) {
+            //TODO: handle exception
+            e.printStackTrace();
+        }
+        
+
+        return "";
     }
     /**
      * Get a string representation of all Adjascent nodes
-     * @param adjascentNode
+     * @param adjascentNodes
      * @return
      */
-    public String getAdjascentNodeToString(List<Node> adjascentNode)
+    public String getAdjascentNodeToString(List<Node> adjascentNodes)
     {
-        String json = "";
-        for (Node node : adjascentNode) {
-            json += String.format("\n\t%b",node.toString());
+        
+        StringBuilder sb = new StringBuilder();
+        for (Node node : adjascentNodes) {
+            sb.append("\n"+node.toString()+"\n");
         }
-        return json;
+        return sb.toString();
     }
-
-    public static void main(String[] args) {
+    /**
+     * Get a string representation of all Adjascent nodes
+     * @param adjascentNodes
+     * @return
+     */
+    public String getAdjascentNodeToString()
+    {
+        
+        StringBuilder sb = new StringBuilder();
+        for (Node node : this.adjascentNodes) {
+            sb.append("\n"+node.toString()+"\n");
+        }
+        return sb.toString();
+    }
+    public static void main(String[] args) throws Exception
+    {
         log.info("Start of main...");
 
         ////////////// Graph /////////////////
@@ -254,7 +318,9 @@ public class Node {
         b.setNextShortestNode(c);
         b.adjascentNodes.add(a);
         b.adjascentNodes.add(c);
-        System.out.println(b.getAdjascentNodeToString(b.getAdjascentNodes()));
+        // log.info("\n\nB: {} \n\n A: {}", b.toString(), a.toString());
+        // log.info("\n\nAdjascent nodes of A: {} \n\nAdjascent nodes of B: {}", b.getAdjascentNodeToString(), a.getAdjascentNodeToString());
+        // System.out.println(b.getAdjascentNodeToString(b.getAdjascentNodes()));
         // // add node c
         // c.setDistanceToPreviousShortestNode(92);
         // c.setPreviousShortestNode(b);
@@ -272,6 +338,11 @@ public class Node {
 
         // log.info("Neamt: {}", b.getAdjascentNodeToString(b.getAdjascentNodes()));
         // log.info("Neamt: {}",b.toString());
+     //Creating the ObjectMapper object
+     ObjectMapper mapper = new ObjectMapper();
+     //Converting the Object to JSONString
+     String jsonString = mapper.writeValueAsString(a);
+     System.out.println(jsonString);
     }
 
 }
