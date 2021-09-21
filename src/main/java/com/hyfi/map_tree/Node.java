@@ -2,21 +2,18 @@ package com.hyfi.map_tree;
 // Imports for logging
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import com.google.gson.*;
-import ch.qos.logback.classic.pattern.SyslogStartConverter;
 
 import java.util.*;
-import  org.json.simple.*;
 
 public class Node {
-    private static final Logger log = LoggerFactory.getLogger(Node.class);   
-    String nodeName = null;
+    // private static final Logger log = LoggerFactory.getLogger(Node.class);   
+    private String nodeName = null;
     // Node node = null;
-    List<Node> adjascentNodes = null;
-    Node nextShortestNode = null;
-    Node previousShortestNode = null;
-    Integer distanceToNextShortestNode = null;
-    Integer distanceToPreviousShortestNode = null;
+    private List<Node> adjascentNodes = null;
+    private Node nextShortestNode = null;
+    private Node previousShortestNode = null;
+    private Integer distanceToNextShortestNode = null;
+    private Integer distanceToPreviousShortestNode = null;
 
     /**
      * Default constructor; creates a null node
@@ -46,8 +43,6 @@ public class Node {
         this.previousShortestNode = previousNode;
         this.adjascentNodes.add(previousNode);
         this.adjascentNodes.add(nextNode);
-
-
     }
     /**
      * Make a copy of a node and its adjascent node
@@ -101,22 +96,16 @@ public class Node {
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }
-    // /**
-    //  * Get this Node
-    //  * @return
-    //  */
-    // public Node getNode() {
-    //     return this.node;
-    // }
-    // /**
-    //  * Set this Node
-    //  * @param node
-    //  */
-    // public void setNode(Node node) {
-    //     this.node = node;
-    // }
     /**
      * Get adjascent nodes
+     * @return
+     */
+    public void setAdjascentNode(Node node)
+    {
+        this.adjascentNodes.add(node);
+    }
+    /**
+     * Get list of adjascent nodes/edges by name
      * @return
      */
     public List<Node> getAdjascentNodes() {
@@ -196,72 +185,32 @@ public class Node {
 
     @Override
     public String toString() {
-        String json = "";
-        String adj = "";
-        
+        StringBuilder sb = null;
+        int cnt = 0;
         try {
-            String nextNodeName = (getNextShortestNode() == null ? "none" : getNextShortestNode().getNodeName());
-            String previousNodeName = (getPreviousShortestNode() == null ? "none" : getPreviousShortestNode().getNodeName());
-            StringBuilder sb = new StringBuilder();
-            for (Node n : this.adjascentNodes) {
-                sb.append("\n"+n.toString()+"\n");
-            }
+            sb = new StringBuilder();
             // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
-            sb.append("{\n" +
-                    "\t 'nodeName': '" + getNodeName() + "',\n"+
-                    "\t 'adjascentNodes': '[\n");
-            for (Node n : this.adjascentNodes) {
-                sb.append("\n"+n+"\n");
-            }
-            
-            sb.append("]',\n" +
-                      "\t 'nextShortestNode': '" + (nextNodeName) + "',\n" +
-                      "\t 'previousShortestNode': '" + (previousNodeName) + "',\n" +
-                      "\t 'distanceToNextShortestNode': '" + getDistanceToNextShortestNode() + "',\n" +
-                      "\t 'distanceToPreviousShortestNode': '" + getDistanceToPreviousShortestNode() + "'\n" +
-                      "}");
+            sb.append("\n{\n" +
+                    "\t 'nodeName': '" + getNodeName() + "',\n\t 'Adjascent Nodes': [");
+                    for (Node n : this.adjascentNodes) 
+                    {
+                        if (cnt < this.adjascentNodes.size() && this.adjascentNodes.size() > 1)
+                            sb.append("'"+n.getNodeName()+"',");
+                        else if (this.adjascentNodes.size() == 1)  sb.append("'"+n.getNodeName()+"'");
+                        else if (cnt == this.adjascentNodes.size()-1 ) sb.append("'"+n.getNodeName()+"'");
+                        cnt++;
+                    }
+            sb.append("],\n" +
+                      "\t 'nextShortestNode': '" + (getNextShortestNode() == null ? "none" : getNextShortestNode().getNodeName()) + "',\n" +
+                      "\t 'previousShortestNode': '" + (getPreviousShortestNode() == null ? "none" : getPreviousShortestNode().getNodeName()) + "',\n" +
+                      "\t 'distanceToNextShortestNode': '" + (getDistanceToNextShortestNode() == null ? "none" : getDistanceToNextShortestNode()) + "',\n" +
+                      "\t 'distanceToPreviousShortestNode': '" + (getDistanceToPreviousShortestNode() == null ? "none" : getDistanceToPreviousShortestNode()) + "'\n" +
+                      "}\n");
         } catch (NullPointerException e) {
             //TODO: handle exception
             e.printStackTrace();
         }
-        return json;
-    }
-    
-    private String toString(Node node)
-    {
-
-        try {
-            String nextNodeName = (getNextShortestNode() == null ? "none" : getNextShortestNode().getNodeName());
-            String previousNodeName = (getPreviousShortestNode() == null ? "none" : getPreviousShortestNode().getNodeName());
-
-            StringBuilder sb = new StringBuilder();
-            for (Node n : this.adjascentNodes) {
-                sb.append("\n"+n.toString()+"\n");
-            }
-            // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
-            sb.append("{\n" +
-                    "\t 'nodeName': '" + getNodeName() + "',\n"+
-                    "\t 'adjascentNodes': '[\n");
-            for (Node n : this.adjascentNodes) 
-            {
-                sb.append("\n"+n+"\n");            
-            }
-            
-            sb.append("]',\n" +
-                      "\t 'nextShortestNode': '" + (nextNodeName) + "',\n" +
-                      "\t 'previousShortestNode': '" + (previousNodeName) + "',\n" +
-                      "\t 'distanceToNextShortestNode': '" + getDistanceToNextShortestNode() + "',\n" +
-                      "\t 'distanceToPreviousShortestNode': '" + getDistanceToPreviousShortestNode() + "'\n" +
-                      "}");
-
-
-        } catch (NullPointerException e) {
-            //TODO: handle exception
-            e.printStackTrace();
-        }
-        
-
-        return "";
+        return sb.toString();
     }
     /**
      * Get a string representation of all Adjascent nodes
@@ -284,65 +233,17 @@ public class Node {
      */
     public String getAdjascentNodeToString()
     {
-        
         StringBuilder sb = new StringBuilder();
         for (Node node : this.adjascentNodes) {
-            sb.append("\n"+node.toString()+"\n");
+            sb.append(""+node.toString()+",");
         }
         return sb.toString();
     }
-    public static void main(String[] args) throws Exception
-    {
-        log.info("Start of main...");
+    // public static void main(String[] args) throws Exception
+    // {
 
-        ////////////// Graph /////////////////
-        Node a = new Node("neamt");
-        Node b = new Node("Iasi");
-        Node c = new Node("vaslui");
-        Node d = new Node("urziceni");
-        Node e = new Node("Bucharest");
-        Node f = new Node("Giurgiu");
-        Node g = new Node("Hirsova");
-        Node h = new Node("Eforic");
+        
 
-        // add node a
-        a.setDistanceToPreviousShortestNode(null);
-        a.setPreviousShortestNode(null);
-        a.setDistanceToNextShortestNode(87);
-        a.setNextShortestNode(b);
-        a.adjascentNodes.add(b);
-        // // add node b
-        b.setDistanceToPreviousShortestNode(87);
-        b.setPreviousShortestNode(a);
-        b.setDistanceToNextShortestNode(92);
-        b.setNextShortestNode(c);
-        b.adjascentNodes.add(a);
-        b.adjascentNodes.add(c);
-        // log.info("\n\nB: {} \n\n A: {}", b.toString(), a.toString());
-        // log.info("\n\nAdjascent nodes of A: {} \n\nAdjascent nodes of B: {}", b.getAdjascentNodeToString(), a.getAdjascentNodeToString());
-        // System.out.println(b.getAdjascentNodeToString(b.getAdjascentNodes()));
-        // // add node c
-        // c.setDistanceToPreviousShortestNode(92);
-        // c.setPreviousShortestNode(b);
-        // c.setDistanceToNextShortestNode(142);
-        // c.setNextShortestNode(d);
-        // c.adjascentNodes.add(b);
-        // c.adjascentNodes.add(d);
-        // // add node d
-        // d.setDistanceToPreviousShortestNode(85);
-        // d.setPreviousShortestNode(e);
-        // d.setDistanceToNextShortestNode(98);
-        // d.setNextShortestNode(g);
-        // d.adjascentNodes.add(e);
-        // d.adjascentNodes.add(g);
-
-        // log.info("Neamt: {}", b.getAdjascentNodeToString(b.getAdjascentNodes()));
-        // log.info("Neamt: {}",b.toString());
-     //Creating the ObjectMapper object
-     ObjectMapper mapper = new ObjectMapper();
-     //Converting the Object to JSONString
-     String jsonString = mapper.writeValueAsString(a);
-     System.out.println(jsonString);
-    }
+    // }
 
 }
