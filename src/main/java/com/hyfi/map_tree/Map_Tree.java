@@ -11,68 +11,194 @@ public class Map_Tree {
      * Default contructor
      */
     public Map_Tree(){}
-
+    /**
+     * Checks if start node is connected to destination node.
+     * Identifies if there is a connected path between any given pair of city names.
+     * @param start the start node
+     * @param dest  the destination node
+     * @return  true/false; is connected...?
+     */
     public boolean isConnectedPath(Node start, Node dest)
     {
         List<Node> connectedPath = new ArrayList<Node>();
+        boolean connected = false;
         if(start == null) return false;
-        if (start.getAdjascentNodes().size() < 3)
-        { log.info("Start Previos node null; Start Next node not null; Start Node: {}",start.toString());
-            if (start.getNodeName() == dest.getNodeName())
-            { log.info("Found a connection..........");
-                return true;
-            }
-            return isConnectedPath(start.getNextShortestNode(), dest);
-        }
-        else if (start.getNextShortestNode() != null && start.getAdjascentNodes().size() < 3)
-        { log.info("Start Next node not null; Dest Previous node not null; Start node: {}", start.toString());
-            if (start.getNodeName() == dest.getNodeName())
-            { log.info("Found a connection..........");
-            return true;
-            }
-            return isConnectedPath(start.getNextShortestNode(), dest);
-        }
-        else if (start.getNextShortestNode() == null )
-        { log.info("Start Next node not null; Dest Previous node not null; Start node: {}", start.toString());
-            if (start.getNodeName() == dest.getNodeName())
-            { log.info("Found a connection..........");
-                return true;
-            }
-
-        }
-        
+        // Traverse each path for nodes with more than 2 adjascent path
         if (start.getAdjascentNodes().size() > 2)
         { log.info("Start Next not null; Adjascent Node > 2; Start Node: {}",start.toString());
-            boolean isCon = false;
             if (start.getNodeName() == dest.getNodeName())
-            { log.info("Found a connection..........");
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
                 return true;
             }
             for (Node n : start.getAdjascentNodes()) 
             {
                 log.info("Checking From Adjascent Node: {}", n.toString());
                 if (n.getNodeName() == dest.getNodeName())
-                { log.info("Found a connection..........");
+                {   log.info("Found a connection..........");
+                    log.info("Found node: {}",start.toString());
+                    connectedPath.add(start);
                     return true;
                 }
-                isCon = isConnectedPath(n, dest);
-                if (isCon == true) return true;
+                connected = isConnectedPath(n, dest);
+                if (connected)
+                {   log.info("Found a connection..........");
+                    log.info("Found node: {}",start.toString());
+                    connectedPath.add(start);
+                    return true;
+                }
+            }            
+            if (start.getNextShortestNode() == null && connected == false)
+            {
+                connected = goInReverse(start,dest);
+                if (connected)
+                {   log.info("Found a connection..........");
+                    log.info("Found node: {}",start.toString());
+                    connectedPath.add(start);
+                    return true;
+                }
             }
-            // for (int i = 0; i < start.getAdjascentNodes().size(); i++) 
-            // {
-            //     Node n = start.getAdjascentNodes().get(i);
-            //     log.info("Checking From Node: {}", n.toString());
-            //     isCon = isConnectedPath(n, dest);
-            //     if (isCon == true) return true;
-            //     else if (i != start.getAdjascentNodes().size()-1)
-            //         return isConnectedPath(n, dest);
-            // }            
             
         }
+        // only check nodes with two or less connecting edges or adjascent node
+        if (start.getAdjascentNodes().size() < 3 && start.getNextShortestNode() != null)
+        { log.info("Start Previos node null; Start Next node not null; Start Node: {}",start.toString());
+            if (start.getNodeName() == dest.getNodeName())
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+            connected = isConnectedPath(start.getNextShortestNode(), dest);
+            if (connected)
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+        }
+        // only check if 
+        else if (start.getNextShortestNode() != null && start.getAdjascentNodes().size() < 3)
+        { log.info("Start Next node not null; Dest Previous node not null; Start node: {}", start.toString());
+            connected = false;    
+        if (start.getNodeName() == dest.getNodeName())
+            { log.info("Found a connection..........");
+                return true;
+            }
+            connected = isConnectedPath(start.getNextShortestNode(), dest);
+            if (connected)
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+        }
+        else if (start.getNextShortestNode() == null )
+        { log.info("Start Next node not null; Dest Previous node not null; Start node: {}", start.toString());
+            if (start.getNodeName() == dest.getNodeName())
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
 
-        return false;
+        }
+        // if we can't find the dest node going forward, we now got in reverse
+        if (!connected)
+        {   log.info("Found a connection..........");
+            log.info("Found node: {}",start.toString());
+            connectedPath.add(start);
+            connected = goInReverse(start, dest);
+            if (connected)
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+        }
+        return connected;
     }
+    /**
+     * Checks starting at previous node
+     * @param start
+     * @param dest
+     * @return
+     */
+    private boolean goInReverse(Node start, Node dest)
+    {
+        boolean connected = false;
+        List<Node> connectedPath = new ArrayList<Node>();
+        if(start == null) return false;
+        if (start.getAdjascentNodes().size() < 3 && start.getPreviousShortestNode() != null)
+        { log.info("Start Previos node null; Start Next node not null; Start Node: {}",start.toString());
+            if (start.getNodeName() == dest.getNodeName())
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+            return isConnectedPath(start.getPreviousShortestNode(), dest);
+        }
+        else if (start.getPreviousShortestNode() != null && start.getAdjascentNodes().size() < 3)
+        { log.info("Start Next node not null; Dest Previous node not null; Start node: {}", start.toString());  
+        if (start.getNodeName() == dest.getNodeName())
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+            log.info("Next node: {}",start.getNextShortestNode().toString());
+            connected = isConnectedPath(start.getPreviousShortestNode(), dest);
+            if (connected)
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);            
+                return true; 
+            }
 
+        }
+        else if (start.getPreviousShortestNode() == null )
+        { log.info("Start Next node not null; Dest Previous node not null; Start node: {}", start.toString());
+            if (start.getNodeName() == dest.getNodeName())
+            {   log.info("Found a connection..........");
+                log.info("Found node: {}",start.toString());
+                connectedPath.add(start);
+                return true;
+            }
+            else return false;
+        }
+        
+        // // Traverse each path for nodes with more than 2 adjascent path
+        // if (start.getAdjascentNodes().size() > 2)
+        // { log.info("Start Next not null; Adjascent Node > 2; Start Node: {}",start.toString());
+        //         connected = false;
+        //     if (start.getNodeName() == dest.getNodeName())
+        //     { log.info("Found a connection..........");
+        //         return true;
+        //     }
+        //     for (Node n : start.getAdjascentNodes()) 
+        //     {
+        //         log.info("Checking From Adjascent Node: {}", n.toString());
+        //         if (n.getNodeName() == dest.getNodeName())
+        //         { log.info("Found a connection..........");
+        //             return true;
+        //         }
+        //         System.exit(0);
+        //         connected = goInReverse(n, dest);
+        //         if (connected) return true;
+        //         connected = isConnectedPath(n, dest);
+        //         if (connected) return true;
+        //     }            
+        //     if (start.getNextShortestNode() == null && start.getPreviousShortestNode() != null && connected == false)
+        //     {
+        //         connected = isConnectedPath(start.getPreviousShortestNode(),dest);
+        //         if (connected) return true;
+        //     }     
+        //     if (connected) return true;   
+        // }
+        return connected;
+    }
     public static void main(String[] args) {
         log.info("Start of main...");
 
@@ -148,13 +274,12 @@ public class Map_Tree {
         eforie.setDistanceToNextShortestNode(null);
         eforie.setNextShortestNode(null);
         eforie.setAdjascentNode(hirsova);
-        // System.out.println(iasi.toString());
         // log.info("\n\nNeamt: {} \n\n Iasi: {} \n\n Vaslui: {} \n\n Urziceni: {} \n\n Bucharest: {} \n\n Hirsova: {} \n\n eforie: {} \n\n Giurgiu: {}",neamt.toString(),iasi.toString(), vaslui.toString(),urziceni.toString(),bucharest.toString(),hirsova.toString(),eforie.toString(),giurgiu.toString());
 
         // System.out.println("\n"+eforie.getPreviousShortestNode().getPreviousShortestNode().getNodeName()+":\n"+eforie.getPreviousShortestNode().getPreviousShortestNode().getAdjascentNodeToString());
 
         Map_Tree m = new Map_Tree();
         // check if their is a connected path between neamt and eforie
-        System.out.println(m.isConnectedPath(neamt, eforie));
+        log.info("Is connected: {}",m.isConnectedPath(giurgiu, eforie));
     }
 }

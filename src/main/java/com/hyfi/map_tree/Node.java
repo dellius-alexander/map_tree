@@ -1,7 +1,7 @@
 package com.hyfi.map_tree;
-// Imports for logging
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+// // Imports for logging
+// import org.slf4j.Logger;
+// import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
@@ -55,33 +55,33 @@ public class Node {
         this.nodeName = nodeName;
         this.adjascentNodes = adjNodes;
     }
-    /**
-     * Gets the node thats the shortest in the list of
-     * adjascent nodes
-     * @param adjNodes
-     * @return the next shortest node
-     */
-    private Node getNextShortest(List<Node> adjNodes)
-    {   // create temp node
-        Node n = null;
-        // Collection<String,Node> adjascentNode_ = new Collection<E>(){
+    // /**
+    //  * Gets the node thats the shortest in the list of
+    //  * adjascent nodes
+    //  * @param adjNodes
+    //  * @return the next shortest node
+    //  */
+    // private Node getNextShortest(List<Node> adjNodes)
+    // {   // create temp node
+    //     Node n = null;
+    //     // Collection<String,Node> adjascentNode_ = new Collection<E>(){
             
-        // };
-        Integer distance = Integer.MAX_VALUE;
-        for (Node node : adjNodes) 
-        {   // find the adjescent node with the shortest
-            // compare the distance between each node and source node
-            // and keep the shortest distance, now compare it to the 
-            // adjascent node and assign the node with the shortest path
-            n = new Node();
-            if ((distance = Math.min(distance, node.getDistanceToPreviousShortestNode())) == node.getDistanceToPreviousShortestNode())
-            {   // if this node has a shorter distance     
-                this.distanceToNextShortestNode = node.getDistanceToPreviousShortestNode();
-                n = node;
-            }
-        }
-        return n;
-    }
+    //     // };
+    //     Integer distance = Integer.MAX_VALUE;
+    //     for (Node node : adjNodes) 
+    //     {   // find the adjescent node with the shortest
+    //         // compare the distance between each node and source node
+    //         // and keep the shortest distance, now compare it to the 
+    //         // adjascent node and assign the node with the shortest path
+    //         n = new Node();
+    //         if ((distance = Math.min(distance, node.getDistanceToPreviousShortestNode())) == node.getDistanceToPreviousShortestNode())
+    //         {   // if this node has a shorter distance     
+    //             this.distanceToNextShortestNode = node.getDistanceToPreviousShortestNode();
+    //             n = node;
+    //         }
+    //     }
+    //     return n;
+    // }
     /**
      * Get node name
      * @return
@@ -182,7 +182,9 @@ public class Node {
     public void setDistanceToPreviousShortestNode(Integer distanceToPreviousShortestNode) {
         this.distanceToPreviousShortestNode = distanceToPreviousShortestNode;
     }
-
+    /**
+     * To String JSON
+     */
     @Override
     public String toString() {
         StringBuilder sb = null;
@@ -207,7 +209,7 @@ public class Node {
                       "\t 'distanceToPreviousShortestNode': '" + (getDistanceToPreviousShortestNode() == null ? "none" : getDistanceToPreviousShortestNode()) + "'\n" +
                       "}\n");
         } catch (NullPointerException e) {
-            //TODO: handle exception
+            
             e.printStackTrace();
         }
         return sb.toString();
