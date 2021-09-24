@@ -18,9 +18,9 @@ public class Map_Tree {
      * @param dest  the destination node
      * @return  true/false; is connected...?
      */
-    public boolean isConnectedPath(Node start, Node dest)
+    public boolean isConnectedPath(Node<String, String> start, Node<String, String> dest)
     {
-        List<Node> connectedPath = new ArrayList<Node>();
+        List<Node<String, String>> connectedPath = new ArrayList<Node<String, String>>();
         boolean connected = false;
         if(start == null) return false;
         // Traverse each path for nodes with more than 2 adjascent path
@@ -32,7 +32,7 @@ public class Map_Tree {
                 connectedPath.add(start);
                 return true;
             }
-            for (Node n : start.getAdjascentNodes()) 
+            for (Node<String, String> n : start.getAdjascentNodes()) 
             {
                 log.info("Checking From Adjascent Node: {}", n.toString());
                 if (n.getNodeName() == dest.getNodeName())
@@ -125,10 +125,10 @@ public class Map_Tree {
      * @param dest
      * @return
      */
-    private boolean goInReverse(Node start, Node dest)
+    private boolean goInReverse(Node<String, String> start, Node<String, String> dest)
     {
         boolean connected = false;
-        List<Node> connectedPath = new ArrayList<Node>();
+        List<Node<String, String>> connectedPath = new ArrayList<Node<String, String>>();
         if(start == null) return false;
         if (start.getAdjascentNodes().size() < 3 && start.getPreviousShortestNode() != null)
         { log.info("Start Previos node null; Start Next node not null; Start Node: {}",start.toString());
@@ -203,14 +203,14 @@ public class Map_Tree {
         log.info("Start of main...");
 
         ////////////// Graph /////////////////
-        Node neamt = new Node("neamt");
-        Node iasi = new Node("Iasi");
-        Node vaslui = new Node("vaslui");
-        Node urziceni = new Node("urziceni");
-        Node bucharest = new Node("Bucharest");
-        Node giurgiu = new Node("Giurgiu");
-        Node hirsova = new Node("Hirsova");
-        Node eforie = new Node("Eforic");
+        Node neamt = new Node<String,String>("neamt","Hello world");
+        Node iasi = new Node<String,String>("Iasi","Amazing Grace");
+        Node vaslui = new Node<String,String>("vaslui","Wonderful...");
+        Node urziceni = new Node<String,String>("urziceni","Hello Kitty");
+        Node bucharest = new Node<String,String>("Bucharest","Go harder...");
+        Node giurgiu = new Node<String,String>("Giurgiu","Just Do IT...");
+        Node hirsova = new Node<String,String>("Hirsova","Howdy Partner...");
+        Node eforie = new Node<String,String>("Eforic","Whew...");
 
         // add node neamt
         neamt.setDistanceToPreviousShortestNode(null);
@@ -280,6 +280,6 @@ public class Map_Tree {
 
         Map_Tree m = new Map_Tree();
         // check if their is a connected path between neamt and eforie
-        log.info("Is connected: {}",m.isConnectedPath(giurgiu, eforie));
+        log.info("Is connected: {}",m.isConnectedPath(neamt, vaslui));
     }
 }
