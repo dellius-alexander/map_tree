@@ -1,55 +1,17 @@
 package com.hyfi.map_tree;
 // // Imports for logging
-// import org.slf4j.Logger;
-// import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-
-// A Simple Java program to show multiple
-// type parameters in Java Generics
-
-// We use < > to specify Parameter type
-class Test<T, U>
-{
-    T obj1;  // An object of type T
-    U obj2;  // An object of type U
-
-    // constructor
-    Test(T obj1, U obj2)
-    {
-        this.obj1 = obj1;
-        this.obj2 = obj2;
-    }
-
-    // To print objects of T and U
-    public void print()
-    {
-        System.out.println(obj1);
-        System.out.println(obj2);
-    }
-}
-
-// Driver class to test above
-class Main
-{
-    public static void main (String[] args)
-    {
-        Test <String, Integer> obj =
-            new Test<String, Integer>("GfG", 15);
-
-        obj.print();
-    }
-}
-
-
 class Node<Name, Data> {
-    // private static final Logger log = LoggerFactory.getLogger(Node.class);
-    private Name name = null;
-    private Data data = null;
-    private List<Data> records;
+    private static final Logger log = LoggerFactory.getLogger(Node.class);
+    private Name name;
+    private Data data;
+    private List<Data> records = new ArrayList<Data>();
     // Node node = null;
-    private List<Node<Name, Data>> adjascentNodes = null;
+    private List<Node<Name, Data>> adjascentNodes = new ArrayList<Node<Name,Data>>();
     private Node<Name, Data> nextShortestNode = null;
     private Node<Name, Data> previousShortestNode = null;
     private Integer distanceToNextShortestNode = null;
@@ -58,7 +20,7 @@ class Node<Name, Data> {
     /**
      * Default constructor; creates a null node
      */
-    public Node(){}
+    public Node(){log.info("init......");}
     /**
      * Create new node name and create a new node
      * @param name
@@ -72,8 +34,7 @@ class Node<Name, Data> {
     {
         this.data = data;
         this.name = name;
-        this.records.add(data);
-        this.adjascentNodes = new ArrayList<Node<Name, Data>>();        
+        this.records.add(data);   
     }
     /**
      * Create a new node, define the next and previous connected nodes
@@ -84,17 +45,22 @@ class Node<Name, Data> {
     public Node(Name name, Node<Name, Data> nextNode, Node<Name, Data> previousNode)
     {
         this.name = name;
-        this.adjascentNodes = new ArrayList<Node<Name, Data>>();
+        this.records.add(data);
         this.nextShortestNode = nextNode;
         this.previousShortestNode = previousNode;
         this.adjascentNodes.add(previousNode);
         this.adjascentNodes.add(nextNode);
     }
+    /**
+     * Create new node
+     * @param name
+     * @param nextNode
+     * @param previousNode
+     * @param data
+     */
     public Node(Name name, Node<Name, Data> nextNode, Node<Name, Data> previousNode, Data data)
     {
-      
         this.data = data;
-        this.adjascentNodes = new ArrayList<Node<Name, Data>>();
         this.name = name;
         this.nextShortestNode = nextNode;
         this.previousShortestNode = previousNode;
@@ -102,16 +68,21 @@ class Node<Name, Data> {
         this.adjascentNodes.add(nextNode);
     }
     /**
-     * Make a copy of a node and its adjascent node
-     * @param node
+     * Create new node
+     * @param name
      * @param adjNodes
      */
     public Node(Name name, List<Node<Name, Data>> adjNodes)
     {
-        this.adjascentNodes = new ArrayList<Node<Name, Data>>();
         this.name = name;
         this.adjascentNodes = adjNodes;
     }
+    /**
+     * Create new node
+     * @param name
+     * @param adjNodes
+     * @param data
+     */
     public Node(Name name, List<Node<Name, Data>> adjNodes, Data data)
     {
         this.data = data;
@@ -119,13 +90,24 @@ class Node<Name, Data> {
         this.name = name;
         this.adjascentNodes = adjNodes;
     }
+    /**
+     * Sets the data object
+     * @param data the data object
+     */
     public void setData(Data data){this.data = data;}
+    /**
+     * Gets the data object
+     * @return
+     */
     public Data getData(){return this.data;}
-    public List<Data> getRecords(List<Data> record)
+    /**
+     * Add data to records
+     * @param data
+     */
+    public void addRecord(Data data){this.records.add(data);}
+    public List<Data> getRecords()
     {
-
-
-        return null;
+        return this.records;
     }
     /**
      * Gets the node thats the shortest in the list of
@@ -257,6 +239,14 @@ class Node<Name, Data> {
         this.distanceToPreviousShortestNode = distanceToPreviousShortestNode;
     }
     /**
+     * Contents of this node
+     */
+    public void contents()
+    {
+        System.out.println("Name: "+this.name+" \nData: "+this.data);
+
+    }
+    /**
      * To String JSON
      */
     @Override
@@ -267,7 +257,7 @@ class Node<Name, Data> {
             sb = new StringBuilder();
             // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
             sb.append("\n{\n" +
-                    "\t 'name': '" + getNodeName() + "',\n\t 'Adjascent Nodes': [");
+                    "\t 'Name': '" + getNodeName() + "',\n\t 'Data: '"+getData().toString()+"',\n\t 'Adjascent Nodes': [");
                     for (Node<Name, Data> n : this.adjascentNodes) 
                     {
                         if (cnt < this.adjascentNodes.size() && this.adjascentNodes.size() > 1)
@@ -315,11 +305,34 @@ class Node<Name, Data> {
         }
         return sb.toString();
     }
+    
     // public static void main(String[] args) throws Exception
     // {
+    //     log.info("Start of Main......");
+    //     Node<String,String> neamt = new Node<String,String>("neamt","Hello world");
+    //     Node<String,String> iasi = new Node<String,String>("Iasi","Amazing Grace");
+    //     Node<String,String> vaslui = new Node<String,String>("vaslui","Wonderful...");
+    //     // add node neamt
+    //     neamt.setDistanceToPreviousShortestNode(null);
+    //     neamt.setPreviousShortestNode(null);
+    //     neamt.setDistanceToNextShortestNode(87);
+    //     neamt.setNextShortestNode(iasi);
+    //     neamt.setAdjascentNode(iasi);
 
+    //     // add node Iasi
+    //     iasi.setDistanceToPreviousShortestNode(87);
+    //     iasi.setPreviousShortestNode(neamt);
+    //     iasi.setDistanceToNextShortestNode(92);
+    //     iasi.setNextShortestNode(vaslui);
+    //     iasi.setAdjascentNode(neamt);
+    //     iasi.setAdjascentNode(vaslui);
         
+    //     iasi.contents();
+    //     System.out.println(iasi.toString());
+    //     System.exit(0);
 
+    //     /////////////////////////////////////////
+    //     log.info("End of Main......");
     // }
 
 }

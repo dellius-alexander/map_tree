@@ -5,6 +5,9 @@ import java.util.*;
 // Imports for logging
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+/**
+ * 
+ */
 public class Map_Tree {
     private static final Logger log = LoggerFactory.getLogger(Map_Tree.class);   
     /**
@@ -201,17 +204,19 @@ public class Map_Tree {
     }
     public static void main(String[] args) {
         log.info("Start of main...");
-
+        
         ////////////// Graph /////////////////
-        Node neamt = new Node<String,String>("neamt","Hello world");
-        Node iasi = new Node<String,String>("Iasi","Amazing Grace");
-        Node vaslui = new Node<String,String>("vaslui","Wonderful...");
-        Node urziceni = new Node<String,String>("urziceni","Hello Kitty");
-        Node bucharest = new Node<String,String>("Bucharest","Go harder...");
-        Node giurgiu = new Node<String,String>("Giurgiu","Just Do IT...");
-        Node hirsova = new Node<String,String>("Hirsova","Howdy Partner...");
-        Node eforie = new Node<String,String>("Eforic","Whew...");
+        Node<String,String> neamt = new Node<String,String>("neamt","laskdlaksd;flajsasd;kfalsf");
+        Node<String,String> iasi = new Node<String,String>("Iasi","Amazing Grace");
+        Node<String,String> vaslui = new Node<String,String>("vaslui","Wonderful...");
+        Node<String,String> urziceni = new Node<String,String>("urziceni","Hello Kitty");
+        Node<String,String> bucharest = new Node<String,String>("Bucharest","Go harder...");
+        Node<String,String> giurgiu = new Node<String,String>("Giurgiu","Just Do IT...");
+        Node<String,String> hirsova = new Node<String,String>("Hirsova","Howdy Partner...");
+        Node<String,String> eforie = new Node<String,String>("Eforic","Whew...");
 
+
+        // System.out.println(iasi.toString());
         // add node neamt
         neamt.setDistanceToPreviousShortestNode(null);
         neamt.setPreviousShortestNode(null);
@@ -280,6 +285,7 @@ public class Map_Tree {
 
         Map_Tree m = new Map_Tree();
         // check if their is a connected path between neamt and eforie
-        log.info("Is connected: {}",m.isConnectedPath(neamt, vaslui));
+        // log.info("Node neamt: {}",neamt.toString());
+        log.info("Is connected: {}",m.isConnectedPath(neamt, eforie));
     }
 }
