@@ -156,7 +156,7 @@ class Node<Name, Data> {
      * Get adjascent nodes
      * @return
      */
-    public void setAdjascentNode(Node<Name, Data> node)
+    public void addAdjascentNode(Node<Name, Data> node)
     {
         this.adjascentNodes.add(node);
     }
@@ -257,7 +257,9 @@ class Node<Name, Data> {
             sb = new StringBuilder();
             // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
             sb.append("\n{\n" +
-                    "\t 'Name': '" + getNodeName() + "',\n\t 'Data: '"+getData().toString()+"',\n\t 'Adjascent Nodes': [");
+                    "\t 'Name': '" + getNodeName() + 
+                    "',\n\t 'Data: '"+getData().toString()+
+                    "',\n\t 'Adjascent Nodes': [");
                     for (Node<Name, Data> n : this.adjascentNodes) 
                     {
                         if (cnt < this.adjascentNodes.size() && this.adjascentNodes.size() > 1)
@@ -317,15 +319,15 @@ class Node<Name, Data> {
     //     neamt.setPreviousShortestNode(null);
     //     neamt.setDistanceToNextShortestNode(87);
     //     neamt.setNextShortestNode(iasi);
-    //     neamt.setAdjascentNode(iasi);
+    //     neamt.addAdjascentNode(iasi);
 
     //     // add node Iasi
     //     iasi.setDistanceToPreviousShortestNode(87);
     //     iasi.setPreviousShortestNode(neamt);
     //     iasi.setDistanceToNextShortestNode(92);
     //     iasi.setNextShortestNode(vaslui);
-    //     iasi.setAdjascentNode(neamt);
-    //     iasi.setAdjascentNode(vaslui);
+    //     iasi.addAdjascentNode(neamt);
+    //     iasi.addAdjascentNode(vaslui);
         
     //     iasi.contents();
     //     System.out.println(iasi.toString());

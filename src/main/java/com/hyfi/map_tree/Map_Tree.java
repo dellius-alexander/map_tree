@@ -222,7 +222,7 @@ public class Map_Tree {
         neamt.setPreviousShortestNode(null);
         neamt.setDistanceToNextShortestNode(87);
         neamt.setNextShortestNode(iasi);
-        neamt.setAdjascentNode(iasi);
+        neamt.addAdjascentNode(iasi);
 
 
         // add node Iasi
@@ -230,60 +230,61 @@ public class Map_Tree {
         iasi.setPreviousShortestNode(neamt);
         iasi.setDistanceToNextShortestNode(92);
         iasi.setNextShortestNode(vaslui);
-        iasi.setAdjascentNode(neamt);
-        iasi.setAdjascentNode(vaslui);
+        iasi.addAdjascentNode(neamt);
+        iasi.addAdjascentNode(vaslui);
 
         // add node vaslui
         vaslui.setDistanceToPreviousShortestNode(92);
         vaslui.setPreviousShortestNode(iasi);
         vaslui.setDistanceToNextShortestNode(142);
         vaslui.setNextShortestNode(urziceni);
-        vaslui.setAdjascentNode(iasi);
-        vaslui.setAdjascentNode(urziceni);
+        vaslui.addAdjascentNode(iasi);
+        vaslui.addAdjascentNode(urziceni);
 
         // add node urziceni
         urziceni.setDistanceToPreviousShortestNode(142);
         urziceni.setPreviousShortestNode(vaslui);
         urziceni.setDistanceToNextShortestNode(85);
         urziceni.setNextShortestNode(bucharest);
-        urziceni.setAdjascentNode(bucharest);
-        urziceni.setAdjascentNode(hirsova);
-        urziceni.setAdjascentNode(vaslui);
+        urziceni.addAdjascentNode(bucharest);
+        urziceni.addAdjascentNode(hirsova);
+        urziceni.addAdjascentNode(vaslui);
 
         // add node hirsova
         hirsova.setDistanceToPreviousShortestNode(98);
         hirsova.setPreviousShortestNode(urziceni);
         hirsova.setDistanceToNextShortestNode(86);
         hirsova.setNextShortestNode(eforie);
-        hirsova.setAdjascentNode(urziceni);
-        hirsova.setAdjascentNode(eforie);
+        hirsova.addAdjascentNode(urziceni);
+        hirsova.addAdjascentNode(eforie);
 
         // add node bucharest
         bucharest.setDistanceToPreviousShortestNode(85);
         bucharest.setPreviousShortestNode(urziceni);
         bucharest.setDistanceToNextShortestNode(90);
         bucharest.setNextShortestNode(giurgiu);
-        bucharest.setAdjascentNode(urziceni);
-        bucharest.setAdjascentNode(giurgiu);
+        bucharest.addAdjascentNode(urziceni);
+        bucharest.addAdjascentNode(giurgiu);
 
         // add node giurgiu
         giurgiu.setDistanceToPreviousShortestNode(90);
         giurgiu.setPreviousShortestNode(bucharest);
         giurgiu.setDistanceToNextShortestNode(null);
         giurgiu.setNextShortestNode(null);
-        giurgiu.setAdjascentNode(bucharest);
+        giurgiu.addAdjascentNode(bucharest);
 
         // add node eforie
         eforie.setDistanceToPreviousShortestNode(86);
         eforie.setPreviousShortestNode(hirsova);
         eforie.setDistanceToNextShortestNode(null);
         eforie.setNextShortestNode(null);
-        eforie.setAdjascentNode(hirsova);
+        eforie.addAdjascentNode(hirsova);
         // log.info("\n\nNeamt: {} \n\n Iasi: {} \n\n Vaslui: {} \n\n Urziceni: {} \n\n Bucharest: {} \n\n Hirsova: {} \n\n eforie: {} \n\n Giurgiu: {}",neamt.toString(),iasi.toString(), vaslui.toString(),urziceni.toString(),bucharest.toString(),hirsova.toString(),eforie.toString(),giurgiu.toString());
 
         // System.out.println("\n"+eforie.getPreviousShortestNode().getPreviousShortestNode().getNodeName()+":\n"+eforie.getPreviousShortestNode().getPreviousShortestNode().getAdjascentNodeToString());
 
         Map_Tree m = new Map_Tree();
+        
         // check if their is a connected path between neamt and eforie
         // log.info("Node neamt: {}",neamt.toString());
         log.info("Is connected: {}",m.isConnectedPath(neamt, eforie));
