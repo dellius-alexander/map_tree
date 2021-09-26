@@ -11,7 +11,7 @@ class Node<Name, Data> {
     private Data data;
     private List<Data> records = new ArrayList<Data>();
     // Node node = null;
-    private List<Node<Name, Data>> adjascentNodes = new ArrayList<Node<Name,Data>>();
+    private List<Node<Name, Data>> adjacentNodes = new ArrayList<Node<Name,Data>>();
     private Node<Name, Data> nextShortestNode = null;
     private Node<Name, Data> previousShortestNode = null;
     private Integer distanceToNextShortestNode = null;
@@ -28,13 +28,13 @@ class Node<Name, Data> {
     public Node(Name name)
     {
         this.name = name;
-        this.adjascentNodes = new ArrayList<Node<Name, Data>>();        
+        this.adjacentNodes = new ArrayList<Node<Name, Data>>();        
     }
     public Node(Name name, Data data)
     {
         this.data = data;
         this.name = name;
-        this.records.add(data);   
+        this.addRecord(data);   
     }
     /**
      * Create a new node, define the next and previous connected nodes
@@ -45,11 +45,12 @@ class Node<Name, Data> {
     public Node(Name name, Node<Name, Data> nextNode, Node<Name, Data> previousNode)
     {
         this.name = name;
-        this.records.add(data);
+        this.addRecord(nextNode.data);
+        this.addRecord(previousNode.data);
         this.nextShortestNode = nextNode;
         this.previousShortestNode = previousNode;
-        this.adjascentNodes.add(previousNode);
-        this.adjascentNodes.add(nextNode);
+        this.adjacentNodes.add(previousNode);
+        this.adjacentNodes.add(nextNode);
     }
     /**
      * Create new node
@@ -62,10 +63,13 @@ class Node<Name, Data> {
     {
         this.data = data;
         this.name = name;
+        this.addRecord(data);   
+        this.addRecord(nextNode.data);
+        this.addRecord(previousNode.data);
         this.nextShortestNode = nextNode;
         this.previousShortestNode = previousNode;
-        this.adjascentNodes.add(previousNode);
-        this.adjascentNodes.add(nextNode);
+        this.adjacentNodes.add(previousNode);
+        this.adjacentNodes.add(nextNode);
     }
     /**
      * Create new node
@@ -75,7 +79,11 @@ class Node<Name, Data> {
     public Node(Name name, List<Node<Name, Data>> adjNodes)
     {
         this.name = name;
-        this.adjascentNodes = adjNodes;
+        this.adjacentNodes = adjNodes;
+        for (Node<Name,Data> node : adjNodes) 
+        {
+            this.addRecord(node.data);   
+        }
     }
     /**
      * Create new node
@@ -85,16 +93,21 @@ class Node<Name, Data> {
      */
     public Node(Name name, List<Node<Name, Data>> adjNodes, Data data)
     {
-        this.data = data;
-        this.adjascentNodes = new ArrayList<Node<Name, Data>>();
         this.name = name;
-        this.adjascentNodes = adjNodes;
+        this.data = data;
+        this.addRecord(data);
+        this.adjacentNodes = new ArrayList<Node<Name, Data>>();
+        this.adjacentNodes = adjNodes;
+        for (Node<Name,Data> node : adjNodes) 
+        {
+            this.addRecord(node.data);   
+        }
     }
     /**
      * Sets the data object
      * @param data the data object
      */
-    public void setData(Data data){this.data = data;}
+    public void setData(Data data){this.data = data; this.addRecord(data);}
     /**
      * Gets the data object
      * @return
@@ -104,39 +117,21 @@ class Node<Name, Data> {
      * Add data to records
      * @param data
      */
-    public void addRecord(Data data){this.records.add(data);}
+    public void addRecord(Data data)
+    {
+        int found = 0;
+        for (Data d : this.records) 
+        {
+            if (d.equals(data)){found++;}
+        }
+        if (found == 0) 
+        {
+            this.records.add(data);
+        }       
+    }
     public List<Data> getRecords()
     {
         return this.records;
-    }
-    /**
-     * Gets the node thats the shortest in the list of
-     * adjascent nodes
-     * @param adjNodes
-     * @return the next shortest node
-     */
-    private Node<Name, Data> getNextShortest(List<Node<Name, Data>> adjNodes)
-    {   // create temp node
-        Node<Name, Data> n = null;
-        // Collection<String,Node> adjascentNode_ = new Collection<E>(){
-            
-        // };
-        Integer distance = Integer.MAX_VALUE;
-        for (int i=0; i < adjNodes.size(); i++) 
-        {   // find the adjescent node with the shortest
-            // compare the distance between each node and source node
-            // and keep the shortest distance, now compare it to the 
-            // adjascent node and assign the node with the shortest path
-            n = adjNodes.get(i);
-
-            for(int j=0; j < adjNodes.size(); j++)
-            {
-
-            }
-            
-        }
-
-        return n;
     }
     /**
      * Get node name
@@ -153,26 +148,26 @@ class Node<Name, Data> {
         this.name = name;
     }
     /**
-     * Get adjascent nodes
+     * Get adjacent nodes
      * @return
      */
-    public void addAdjascentNode(Node<Name, Data> node)
+    public void addAdjacentNode(Node<Name, Data> node)
     {
-        this.adjascentNodes.add(node);
+        this.adjacentNodes.add(node);
     }
     /**
-     * Get list of adjascent nodes/edges by name
+     * Get list of adjacent nodes/edges by name
      * @return
      */
-    public List<Node<Name, Data>> getAdjascentNodes() {
-        return this.adjascentNodes;
+    public List<Node<Name, Data>> getAdjacentNodes() {
+        return this.adjacentNodes;
     }
     /**
-     * Set adjascent nodes
-     * @param adjascentNodes
+     * Set adjacent nodes
+     * @param adjacentNodes
      */
-    public void setAdjascentNodes(List<Node<Name, Data>> adjascentNodes) {
-        this.adjascentNodes = adjascentNodes;
+    public void setAdjacentNodes(List<Node<Name, Data>> adjacentNodes) {
+        this.adjacentNodes = adjacentNodes;
     }
     /**
      * Get next shortest node
@@ -255,17 +250,17 @@ class Node<Name, Data> {
         int cnt = 0;
         try {
             sb = new StringBuilder();
-            // adj = this.adjascentNodes.forEach((n) -> System.out.println(n));
+            // adj = this.adjacentNodes.forEach((n) -> System.out.println(n));
             sb.append("\n{\n" +
                     "\t 'Name': '" + getNodeName() + 
                     "',\n\t 'Data: '"+getData().toString()+
-                    "',\n\t 'Adjascent Nodes': [");
-                    for (Node<Name, Data> n : this.adjascentNodes) 
+                    "',\n\t 'Adjacent Nodes': [");
+                    for (Node<Name, Data> n : this.adjacentNodes) 
                     {
-                        if (cnt < this.adjascentNodes.size() && this.adjascentNodes.size() > 1)
+                        if (cnt < this.adjacentNodes.size() && this.adjacentNodes.size() > 1)
                             sb.append("'"+n.getNodeName()+"',");
-                        else if (this.adjascentNodes.size() == 1)  sb.append("'"+n.getNodeName()+"'");
-                        else if (cnt == this.adjascentNodes.size()-1 ) sb.append("'"+n.getNodeName()+"'");
+                        else if (this.adjacentNodes.size() == 1)  sb.append("'"+n.getNodeName()+"'");
+                        else if (cnt == this.adjacentNodes.size()-1 ) sb.append("'"+n.getNodeName()+"'");
                         cnt++;
                     }
             sb.append("],\n" +
@@ -281,28 +276,28 @@ class Node<Name, Data> {
         return sb.toString();
     }
     /**
-     * Get a string representation of all Adjascent nodes
-     * @param adjascentNodes
+     * Get a string representation of all adjacent nodes
+     * @param adjacentNodes
      * @return
      */
-    public String getAdjascentNodeToString(List<Node<Name, Data>> adjascentNodes)
+    public String getAdjacentNodeToString(List<Node<Name, Data>> adjacentNodes)
     {
         
         StringBuilder sb = new StringBuilder();
-        for (Node<Name, Data> node : adjascentNodes) {
+        for (Node<Name, Data> node : adjacentNodes) {
             sb.append("\n"+node.toString()+"\n");
         }
         return sb.toString();
     }
     /**
-     * Get a string representation of all Adjascent nodes
-     * @param adjascentNodes
+     * Get a string representation of all adjacent nodes
+     * @param adjacentNodes
      * @return
      */
-    public String getAdjascentNodeToString()
+    public String getAdjacentNodeToString()
     {
         StringBuilder sb = new StringBuilder();
-        for (Node<Name, Data> node : this.adjascentNodes) {
+        for (Node<Name, Data> node : this.adjacentNodes) {
             sb.append(""+node.toString()+",");
         }
         return sb.toString();
@@ -319,15 +314,15 @@ class Node<Name, Data> {
     //     neamt.setPreviousShortestNode(null);
     //     neamt.setDistanceToNextShortestNode(87);
     //     neamt.setNextShortestNode(iasi);
-    //     neamt.addAdjascentNode(iasi);
+    //     neamt.addAdjacentNode(iasi);
 
     //     // add node Iasi
     //     iasi.setDistanceToPreviousShortestNode(87);
     //     iasi.setPreviousShortestNode(neamt);
     //     iasi.setDistanceToNextShortestNode(92);
     //     iasi.setNextShortestNode(vaslui);
-    //     iasi.addAdjascentNode(neamt);
-    //     iasi.addAdjascentNode(vaslui);
+    //     iasi.addAdjacentNode(neamt);
+    //     iasi.addAdjacentNode(vaslui);
         
     //     iasi.contents();
     //     System.out.println(iasi.toString());
