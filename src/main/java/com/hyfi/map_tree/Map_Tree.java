@@ -79,7 +79,42 @@ public class Map_Tree {
                     mileage += start.getDistanceToNextShortestNode();
                     return true;
                 }
-            }        
+            }
+            checked = isCheckedNode(start);
+            if (checked) 
+            {
+                for (Node<String, String> n : start.getAdjacentNodes()) 
+                {
+                    if (n.getNextShortestNode() != null && !isCheckedNode(n.getNextShortestNode()))
+                    {   log.info("Checking From adjacent Node: {}", n.toString());
+
+                        connected = goInReverse(n,dest);
+        
+                    }
+                    else if (n.getNextShortestNode() == null && !isCheckedNode(n))
+                    {   log.info("Checking From adjacent Node: {}", n.toString());
+                        connected = goInReverse(n,dest);
+                    }
+
+                    if (n.getNextShortestNode() != null && isCheckedNode(n.getNextShortestNode()))
+                    {   log.info("Checking From adjacent Node: {}", n.toString());
+
+                        connected = goInReverse(n,dest);
+        
+                    }
+                    else if (n.getNextShortestNode() == null && isCheckedNode(n))
+                    {   log.info("Checking From adjacent Node: {}", n.toString());
+                        connected = goInReverse(n,dest);
+                    }
+                    if (connected)
+                    {   log.info("Found a connection..........");
+                        log.info("Found node: {}",start.toString());
+                        connectedPath.add(start);
+                        mileage += start.getDistanceToNextShortestNode();
+                        return true;
+                    }
+                }      
+            }
         }
         // only check nodes with two or less connecting edges or adjacent node
         if (start.getAdjacentNodes().size() < 3 && start.getNextShortestNode() != null 
@@ -130,7 +165,14 @@ public class Map_Tree {
             }
             else if (start.getNextShortestNode() == null && !connected)
             {
-                return goInReverse(start, dest);
+                connected = goInReverse(start, dest);
+                if (connected)
+                {   log.info("Found a connection..........");
+                    log.info("Found node: {}",start.toString());
+                    connectedPath.add(start);
+                    // mileage += start.getDistanceToNextShortestNode();
+                    return true;
+                }
             }
         }
 
@@ -178,6 +220,29 @@ public class Map_Tree {
                     connectedPath.add(start);
                     // mileage += start.getDistanceToNextShortestNode();
                     return true;
+                }
+            }
+            checked = isCheckedNode(start);
+            if (checked) 
+            {
+                for (Node<String, String> n : start.getAdjacentNodes()) 
+                {
+                    checked = isCheckedNode(checkedNodes, n);
+                    log.info("Has Node: {}; Been checked: {}", n.getNodeName(),checked);
+                    if (!checked)
+                    {
+                        log.info("Checking FORWARD PATH From adjacent Node: {}", n.toString());
+                        
+                        connected = goInReverse(n,dest);
+                    }
+                    // connected = isConnectedPath(n, dest);
+                    if (connected)
+                    {   log.info("Found a connection..........");
+                        log.info("Found node: {}",start.toString());
+                        connectedPath.add(start);
+                        // mileage += start.getDistanceToNextShortestNode();
+                        return true;
+                    }
                 }
             }
         }
@@ -376,7 +441,7 @@ public class Map_Tree {
         
         // check if their is a connected path between neamt and eforie
         // log.info("Node neamt: {}",neamt.toString());
-        log.info("Is connected: {}",m.isConnectedPath(neamt, giurgiu));
+        log.info("Is connected: {}",m.isConnectedPath(giurgiu, eforie));
         log.info("Trip Mileage: {}\n\n", mileage);
         log.info("Connected Path: {}", connectedPath.toString());
         // connectedPath.forEach((n) -> log.info("Is {} connected to {}: {}",n.getNodeName(), urziceni.getNodeName(), m.isConnectedPath(n, urziceni)));
