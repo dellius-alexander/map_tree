@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.*;
 
-class Node<Name, Data> {
+class Node<Name, Data> implements Comparator<Node<Name, Data>>{
     private static final Logger log = LoggerFactory.getLogger(Node.class);
     private Name name;
     private Data data;
@@ -301,6 +301,16 @@ class Node<Name, Data> {
             sb.append(""+node.toString()+",");
         }
         return sb.toString();
+    }
+    /**
+     * Compares two nodes
+     * @param node1
+     * @param node2
+     * @return
+     */
+    @Override
+    public int compare(Node<Name, Data> node1, Node<Name, Data> node2) {
+        return this.compare(node1, node2);
     }
     
     // public static void main(String[] args) throws Exception
