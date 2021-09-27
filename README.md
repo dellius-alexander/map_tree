@@ -1,10 +1,12 @@
 # map_tree
+
 A dockerized Java standalone application with Maven build
 
 [![Apache License 2.0](https://img.shields.io/hexpm/l/plug.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
-[![Java Development Kit 1.8](https://img.shields.io/badge/JDK-1.8-green.svg)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
+[![Java Development Kit 1.8](https://img.shields.io/badge/JDK-11-green.svg)](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
 ## What is this?
+
 This project shows how to automate the creation of a Docker image with a Java command line application using Maven.
 
 - Creates a docker image that runs a Java [main method](src/main/java/com/hyfi/map_tree/HelloWorld.java) on start of the container and terminates after the program is finished
@@ -23,17 +25,18 @@ This project shows how to automate the creation of a Docker image with a Java co
   - Log file is created in the mounted directory of the host.
 
 ## Build
+
 Checkout the project and build it using the [Takari Maven Wrapper](https://github.com/takari/maven-wrapper).
 
 Inside the root directory of the project type the following:
 
-```
+```sh
 ./mvnw clean verify
 ```
 
 If this was successful you should see something like:
 
-```
+```sh
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
@@ -41,21 +44,21 @@ If this was successful you should see something like:
 
 Verify that a Docker image was created:
 
-```
+```bash
 docker images
 ```
 
 The new image should be listed with two tags:
 
-```
+```bash
 REPOSITORY                        TAG
-hyfi/map_tree     0.1.0-SNAPSHOT
-hyfi/map_tree     latest
+hyfi/map_tree                     1.1
+hyfi/map_tree                     latest
 ```
 
 Now run the application by typing:
 
-```
+```bash
 docker run \
 --volume "$(pwd)"/data:/usr/src/map_tree/data \
 --user $UID:$UID \
@@ -65,8 +68,8 @@ hyfi/map_tree
 
 After running the container there should be three files in the [data](data) dircetory of the project:
 
-```
-hello-world.log
-hello-world.txt
+```bash
+map_tree.log
+map_tree.txt
 logback.xml
 ```
